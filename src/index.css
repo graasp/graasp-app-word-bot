@@ -12,3 +12,12 @@ body {
 #root {
   height: 100%;
 }
+
+.rce-mbox.rce-mbox-right {
+  background: #5050d2;
+  color: white;
+}
+
+.rce-mbox-right-notch > path {
+  fill: #5050d2;
+}

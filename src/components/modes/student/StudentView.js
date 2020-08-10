@@ -1,51 +1,80 @@
 import React from 'react';
+import _ from 'lodash';
+import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import { withTranslation } from 'react-i18next';
-import { withStyles } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import { addQueryParamsToUrl } from '../../../utils/url';
+import { Alert } from '@material-ui/lab';
+import { useTranslation } from 'react-i18next';
+import { makeStyles } from '@material-ui/core/styles';
+import 'react-chat-elements/dist/main.css';
+import Questions from './Questions';
+import Start from './Start';
+import { STARTED } from '../../../config/appInstanceResourceTypes';
+import { APP_INSTANCE_RESOURCE, QUESTION } from '../../../config/propTypes';
 
-const styles = theme => ({
-  main: {
-    textAlign: 'center',
-    margin: theme.spacing(),
+const useStyles = makeStyles((theme) => ({
+  root: {
+    padding: theme.spacing(5),
   },
-  message: {
-    padding: theme.spacing(),
-    backgroundColor: theme.status.danger.background[500],
-    color: theme.status.danger.color,
-    marginBottom: theme.spacing(2),
-  },
-});
+}));
 
-export const StudentView = ({ t, classes }) => (
-  <Grid container spacing={10}>
-    <Grid item xs={12} className={classes.main}>
-      <Paper className={classes.message}>
-        {t(
-          'This is the student view. Switch to the teacher view by clicking on the URL below.',
-        )}
-        <a href={addQueryParamsToUrl({ mode: 'teacher' })}>
-          <pre>
-            {`${window.location.host}/${addQueryParamsToUrl({
-              mode: 'teacher',
-            })}`}
-          </pre>
-        </a>
-      </Paper>
-    </Grid>
-  </Grid>
-);
+export function StudentView({ questions, active, startedResource }) {
+  const { t } = useTranslation();
+  const classes = useStyles();
+  if (!active) {
+    return (
+      <div className={classes.root}>
+        <Alert severity="error">
+          {t('This activity is currently not active.')}
+        </Alert>
+      </div>
+    );
+  }
+
+  if (!questions.length) {
+    return (
+      <div className={classes.root}>
+        <Alert severity="error">{t('This activity is empty.')}</Alert>
+      </div>
+    );
+  }
+
+  const started = !_.isEmpty(startedResource);
+  if (!started) {
+    return (
+      <div className={classes.root}>
+        <Start />
+      </div>
+    );
+  }
+
+  return (
+    <div className={classes.root}>
+      <Questions questions={questions} />
+    </div>
+  );
+}
 
 StudentView.propTypes = {
-  t: PropTypes.func.isRequired,
+  questions: PropTypes.arrayOf(QUESTION),
   classes: PropTypes.shape({
-    main: PropTypes.string,
-    message: PropTypes.string,
+    root: PropTypes.string,
   }).isRequired,
+  startedResource: APP_INSTANCE_RESOURCE,
+  active: PropTypes.bool.isRequired,
 };
 
-const StyledComponent = withStyles(styles)(StudentView);
+StudentView.defaultProps = {
+  questions: [],
+  startedResource: {},
+};
 
-export default withTranslation()(StyledComponent);
+const mapStateToProps = ({ context, appInstanceResources }) => {
+  const { userId } = context;
+  return {
+    startedResource: appInstanceResources.content.find(({ user, type }) => {
+      return user === userId && type === STARTED;
+    }),
+  };
+};
+
+export default connect(mapStateToProps)(StudentView);

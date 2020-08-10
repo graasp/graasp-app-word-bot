@@ -9,8 +9,27 @@ import {
 } from '../types';
 import { showErrorToast } from '../utils/toasts';
 
-const DEFAULT_SETTINGS = {
+export const DEFAULT_QUESTION = {
+  conclusion: '',
+  conclusionPrompt: '',
+  context: '',
+  correctPhrase: '',
+  displayPhrase: '',
+  displayPrompt: '',
+  explanation: '',
+  explanationPrompt: '',
+  outro: '',
+  reaction: '',
+};
+
+export const DEFAULT_SETTINGS = {
   headerVisible: false,
+  instructions: '',
+  endTitle: '',
+  endText: '',
+  endRedirectUrl: '',
+  questions: [],
+  active: false,
 };
 
 const INITIAL_STATE = {

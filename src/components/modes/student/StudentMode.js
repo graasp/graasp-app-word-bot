@@ -5,14 +5,17 @@ import StudentView from './StudentView';
 import { DEFAULT_VIEW, FEEDBACK_VIEW } from '../../../config/views';
 import { getAppInstanceResources } from '../../../actions';
 import Loader from '../../common/Loader';
+import { QUESTION } from '../../../config/propTypes';
 
 class StudentMode extends Component {
   static propTypes = {
     appInstanceId: PropTypes.string,
     view: PropTypes.string,
     activity: PropTypes.number,
+    active: PropTypes.bool,
     dispatchGetAppInstanceResources: PropTypes.func.isRequired,
     userId: PropTypes.string,
+    questions: PropTypes.arrayOf(QUESTION),
   };
 
   static defaultProps = {
@@ -20,6 +23,8 @@ class StudentMode extends Component {
     appInstanceId: null,
     activity: 0,
     userId: null,
+    questions: [],
+    active: false,
   };
 
   constructor(props) {
@@ -43,24 +48,28 @@ class StudentMode extends Component {
   }
 
   render() {
-    const { view, activity } = this.props;
+    const { view, activity, questions, active } = this.props;
+
     if (activity) {
       return <Loader />;
     }
+
     switch (view) {
       case FEEDBACK_VIEW:
       case DEFAULT_VIEW:
       default:
-        return <StudentView />;
+        return <StudentView questions={questions} active={active} />;
     }
   }
 }
-const mapStateToProps = ({ context, appInstanceResources }) => {
+const mapStateToProps = ({ context, appInstanceResources, appInstance }) => {
   const { userId, appInstanceId } = context;
   return {
     userId,
     appInstanceId,
     activity: appInstanceResources.activity.length,
+    questions: appInstance.content.settings.questions,
+    active: appInstance.content.settings.active,
   };
 };
 

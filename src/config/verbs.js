@@ -1,2 +1,2 @@
-// eslint-disable-next-line import/prefer-default-export
 export const SAVED = 'saved';
+export const CLICKED = 'clicked';
