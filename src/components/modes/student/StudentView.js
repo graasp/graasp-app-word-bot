@@ -13,7 +13,16 @@ import { APP_INSTANCE_RESOURCE, QUESTION } from '../../../config/propTypes';
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    padding: theme.spacing(5),
+    padding: theme.spacing(0, 5),
+    height: '100%',
+    alignItems: 'flex-start',
+    display: 'flex',
+  },
+  main: {
+    padding: theme.spacing(0, 5),
+    height: '100%',
+    alignItems: 'flex-start',
+    display: 'flex',
   },
 }));
 
@@ -48,7 +57,7 @@ export function StudentView({ questions, active, startedResource }) {
   }
 
   return (
-    <div className={classes.root}>
+    <div className={classes.main}>
       <Questions questions={questions} />
     </div>
   );

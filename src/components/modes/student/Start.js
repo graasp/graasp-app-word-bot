@@ -13,6 +13,9 @@ const useStyles = makeStyles((theme) => ({
     textAlign: 'center',
     marginBottom: theme.spacing(2),
   },
+  root: {
+    marginTop: theme.spacing(5),
+  },
   text: {
     textAlign: 'center',
   },
@@ -34,7 +37,12 @@ export function Start({
 }) {
   const classes = useStyles();
   return (
-    <Grid container alignItems="center" justify="center">
+    <Grid
+      container
+      alignItems="center"
+      justify="center"
+      className={classes.root}
+    >
       <Grid item xs={12} className={classes.title}>
         <Typography variant="h2">Instructions</Typography>
       </Grid>

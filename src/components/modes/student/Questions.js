@@ -2,13 +2,22 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { Grid } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 import 'react-chat-elements/dist/main.css';
 import Question from './Question';
 import { RESPONSE } from '../../../config/appInstanceResourceTypes';
 import End from './End';
 import { APP_INSTANCE_RESOURCE, QUESTION } from '../../../config/propTypes';
 
+const useStyles = makeStyles((theme) => ({
+  questions: {
+    marginTop: theme.spacing(5),
+  },
+}));
+
 export function Questions({ questions, responsesResources }) {
+  const classes = useStyles();
+
   // get current index from number of responses
   let currentQuestionIndex = 0;
   if (responsesResources) {
@@ -22,7 +31,12 @@ export function Questions({ questions, responsesResources }) {
   const currentQuestion = questions[currentQuestionIndex];
 
   return (
-    <Grid container alignItems="center" justify="center">
+    <Grid
+      container
+      alignItems="center"
+      justify="center"
+      className={classes.questions}
+    >
       <Question question={currentQuestion} />
     </Grid>
   );
