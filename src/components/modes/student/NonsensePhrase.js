@@ -230,20 +230,33 @@ export function NonsensePhrase({
             variant="contained"
             className={classes.button}
             disabled={displayPromptResponseButtonDisabled}
-            onClick={() => handleDisplayPromptResponse('It makes sense.')}
+            onClick={() => handleDisplayPromptResponse('Yes')}
           >
-            {t('Makes Sense')}
+            {t('Yes')}
           </Button>
           <Button
             color="primary"
             variant="contained"
+            className={classes.button}
             disabled={displayPromptResponseButtonDisabled}
             onClick={
-              () => handleDisplayPromptResponse("It doesn't make sense.")
+              () => handleDisplayPromptResponse('No')
               // eslint-disable-next-line react/jsx-curly-newline
             }
           >
-            {t("Doesn't Make Sense")}
+            {t('No')}
+          </Button>
+          <Button
+            color="primary"
+            variant="contained"
+            className={classes.button}
+            disabled={displayPromptResponseButtonDisabled}
+            onClick={
+              () => handleDisplayPromptResponse("I'm not sure.")
+              // eslint-disable-next-line react/jsx-curly-newline
+            }
+          >
+            {t('Not Sure')}
           </Button>
         </Response>
       )}
@@ -261,10 +274,20 @@ export function NonsensePhrase({
           <Button
             color="primary"
             variant="contained"
+            className={classes.button}
             disabled={explanationPromptResponseButtonDisabled}
             onClick={() => handleExplanationPromptResponse('No.')}
           >
             {t('No')}
+          </Button>
+          <Button
+            color="primary"
+            className={classes.button}
+            variant="contained"
+            disabled={explanationPromptResponseButtonDisabled}
+            onClick={() => handleExplanationPromptResponse("I'm not sure.")}
+          >
+            {t('Not Sure')}
           </Button>
         </Response>
       )}
@@ -282,10 +305,20 @@ export function NonsensePhrase({
           <Button
             color="primary"
             variant="contained"
+            className={classes.button}
             disabled={conclusionPromptResponseButtonDisabled}
             onClick={() => handleConclusionPromptResponse('No.')}
           >
             {t('No')}
+          </Button>
+          <Button
+            color="primary"
+            variant="contained"
+            className={classes.button}
+            disabled={conclusionPromptResponseButtonDisabled}
+            onClick={() => handleConclusionPromptResponse("I'm not sure.")}
+          >
+            {t('Not Sure')}
           </Button>
         </Response>
       )}
