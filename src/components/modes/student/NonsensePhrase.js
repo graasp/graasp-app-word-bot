@@ -6,13 +6,12 @@ import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import Message from './Message';
 import { postAction, postAppInstanceResource } from '../../../actions';
-import { RESPONSE } from '../../../config/appInstanceResourceTypes';
+import { ENDED, RESPONSE } from '../../../config/appInstanceResourceTypes';
 import Response from './Response';
 import { CLICKED } from '../../../config/verbs';
 
 const useStyles = makeStyles((theme) => ({
   main: {
-    textAlign: 'center',
     margin: theme.spacing(),
   },
   button: {
@@ -76,7 +75,7 @@ export function NonsensePhrase({
     setConclusionPromptResponseButtonDisabled,
   ] = useState(false);
 
-  const handleNext = () => {
+  const handleDone = () => {
     dispatchPostAppInstanceResource({
       data: {
         displayPhrase,
@@ -87,6 +86,10 @@ export function NonsensePhrase({
       },
       type: RESPONSE,
       userId,
+    });
+    dispatchPostAppInstanceResource({
+      userId,
+      type: ENDED,
     });
   };
 
@@ -288,7 +291,7 @@ export function NonsensePhrase({
       )}
       {step === 4 && (
         <Response delay={3} hidden>
-          <Button color="primary" variant="contained" onClick={handleNext}>
+          <Button color="primary" variant="contained" onClick={handleDone}>
             {t('Done')}
           </Button>
         </Response>

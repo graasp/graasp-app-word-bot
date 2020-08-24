@@ -4,9 +4,8 @@ import { connect } from 'react-redux';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
+import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
-import { postAppInstanceResource } from '../../../actions';
-import { ENDED } from '../../../config/appInstanceResourceTypes';
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -25,19 +24,20 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'space-between',
     margin: theme.spacing(4),
   },
+  root: { flex: 1, alignSelf: 'center' },
 }));
 
-export function End({
-  dispatchPostAppInstanceResource,
-  userId,
-  endText,
-  endTitle,
-  endRedirectUrl,
-}) {
+export function End({ endText, endTitle, endRedirectUrl }) {
   const classes = useStyles();
+  const { t } = useTranslation();
 
   return (
-    <Grid container alignItems="center" justify="center">
+    <Grid
+      container
+      alignItems="center"
+      justify="center"
+      className={classes.root}
+    >
       <Grid item xs={12} className={classes.title}>
         <Typography variant="h2">{endTitle}</Typography>
       </Grid>
@@ -45,29 +45,23 @@ export function End({
         <Typography variant="p">{endText}</Typography>
       </Grid>
       <Grid item xs={12} className={classes.button}>
-        <Button
-          color="primary"
-          variant="contained"
-          size="large"
-          onClick={() => {
-            dispatchPostAppInstanceResource({
-              userId,
-              type: ENDED,
-            });
-          }}
-          href={endRedirectUrl}
-          target="_parent"
-        >
-          Done
-        </Button>
+        {endRedirectUrl && (
+          <Button
+            color="primary"
+            variant="contained"
+            size="large"
+            href={endRedirectUrl}
+            target="_parent"
+          >
+            {t('Done')}
+          </Button>
+        )}
       </Grid>
     </Grid>
   );
 }
 
 End.propTypes = {
-  dispatchPostAppInstanceResource: PropTypes.func.isRequired,
-  userId: PropTypes.string.isRequired,
   endText: PropTypes.string,
   endTitle: PropTypes.string,
   endRedirectUrl: PropTypes.string,
@@ -86,8 +80,6 @@ const mapStateToProps = ({ context, appInstance }) => ({
   endRedirectUrl: appInstance.content.settings.endRedirectUrl,
 });
 
-const mapDispatchToProps = {
-  dispatchPostAppInstanceResource: postAppInstanceResource,
-};
+const mapDispatchToProps = {};
 
 export default connect(mapStateToProps, mapDispatchToProps)(End);
