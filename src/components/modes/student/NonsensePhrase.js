@@ -230,7 +230,7 @@ export function NonsensePhrase({
             variant="contained"
             className={classes.button}
             disabled={displayPromptResponseButtonDisabled}
-            onClick={() => handleDisplayPromptResponse('Yes')}
+            onClick={() => handleDisplayPromptResponse('Yes.')}
           >
             {t('Yes')}
           </Button>
@@ -240,7 +240,7 @@ export function NonsensePhrase({
             className={classes.button}
             disabled={displayPromptResponseButtonDisabled}
             onClick={
-              () => handleDisplayPromptResponse('No')
+              () => handleDisplayPromptResponse('No.')
               // eslint-disable-next-line react/jsx-curly-newline
             }
           >
