@@ -1,1 +1,1 @@
-# Graasp App: Word Bot
+# Graasp App: WordBot
