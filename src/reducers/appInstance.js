@@ -30,6 +30,10 @@ export const DEFAULT_SETTINGS = {
   endRedirectUrl: '',
   questions: [],
   active: false,
+  bot: {
+    avatar: 'C',
+    name: 'Chatbot',
+  },
 };
 
 const INITIAL_STATE = {

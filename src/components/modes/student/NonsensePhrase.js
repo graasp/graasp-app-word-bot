@@ -52,6 +52,8 @@ export function NonsensePhrase({
   conclusion,
   conclusionPrompt,
   outro,
+  botAvatar,
+  botName,
 }) {
   const classes = useStyles();
   const { t } = useTranslation();
@@ -135,27 +137,29 @@ export function NonsensePhrase({
   return (
     <>
       <div className={classes.botAvatar}>
-        <Avatar>W</Avatar>
+        <Avatar>{botAvatar}</Avatar>
         <Typography variant="h5" className={classes.botName}>
-          WordBot
+          {botName}
         </Typography>
       </div>
       <Grid item xs={12} className={classes.main}>
         <Paper className={classes.paper}>
           <Message text={context} position="left" typing typingDelay={3000} />
-          <Message
-            text={<em>{`"${displayPhrase}"`}</em>}
-            position="left"
-            hidden
-            hiddenDelay={3000}
-            typing
-            typingDelay={5000}
-          />
+          {displayPhrase && (
+            <Message
+              text={<em>{`"${displayPhrase}"`}</em>}
+              position="left"
+              hidden
+              hiddenDelay={3000}
+              typing
+              typingDelay={5000}
+            />
+          )}
           <Message
             text={displayPrompt}
             position="left"
             hidden
-            hiddenDelay={8000}
+            hiddenDelay={displayPhrase ? 8000 : 3000}
             typing
             typingDelay={2000}
           />
@@ -197,19 +201,21 @@ export function NonsensePhrase({
                 typing
                 typingDelay={5000}
               />
-              <Message
-                text={<em>{`"${correctPhrase}"`}</em>}
-                position="left"
-                hidden
-                hiddenDelay={5000}
-                typing
-                typingDelay={5000}
-              />
+              {correctPhrase && (
+                <Message
+                  text={<em>{`"${correctPhrase}"`}</em>}
+                  position="left"
+                  hidden
+                  hiddenDelay={5000}
+                  typing
+                  typingDelay={5000}
+                />
+              )}
               <Message
                 text={conclusionPrompt}
                 position="left"
                 hidden
-                hiddenDelay={10000}
+                hiddenDelay={correctPhrase ? 10000 : 5000}
                 typing
                 typingDelay={2000}
               />
@@ -224,7 +230,7 @@ export function NonsensePhrase({
         </Paper>
       </Grid>
       {step === 1 && (
-        <Response delay={10} hidden>
+        <Response delay={displayPhrase ? 10 : 5} hidden>
           <Button
             color="primary"
             variant="contained"
@@ -292,7 +298,7 @@ export function NonsensePhrase({
         </Response>
       )}
       {step === 3 && (
-        <Response delay={12} hidden>
+        <Response delay={correctPhrase ? 12 : 7} hidden>
           <Button
             color="primary"
             variant="contained"
@@ -347,6 +353,8 @@ NonsensePhrase.propTypes = {
   dispatchPostAppInstanceResource: PropTypes.func.isRequired,
   dispatchPostAction: PropTypes.func.isRequired,
   userId: PropTypes.string,
+  botAvatar: PropTypes.string,
+  botName: PropTypes.string,
 };
 
 NonsensePhrase.defaultProps = {
@@ -361,10 +369,14 @@ NonsensePhrase.defaultProps = {
   conclusionPrompt: '',
   outro: '',
   userId: '',
+  botAvatar: 'C',
+  botName: 'Chatbot',
 };
 
-const mapStateToProps = ({ context }) => ({
+const mapStateToProps = ({ context, appInstance }) => ({
   userId: context.userId,
+  botAvatar: appInstance.content.settings.bot.avatar,
+  botName: appInstance.content.settings.bot.name,
 });
 
 const mapDispatchToProps = {

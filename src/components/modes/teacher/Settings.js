@@ -66,6 +66,10 @@ class Settings extends Component {
       endTitle: PropTypes.string,
       endRedirectUrl: PropTypes.string,
       questions: PropTypes.arrayOf(PropTypes.shape(DEFAULT_QUESTION)),
+      bot: {
+        avatar: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+      },
     }).isRequired,
     t: PropTypes.func.isRequired,
     dispatchCloseSettings: PropTypes.func.isRequired,
@@ -125,12 +129,13 @@ class Settings extends Component {
   };
 
   handleChangeTextField = (key) => ({ target: { value } }) => {
-    this.setState((prevState) => ({
-      settings: {
-        ...prevState.settings,
-        [key]: value,
-      },
-    }));
+    this.setState((prevState) => {
+      // get the previous state's settings
+      const settings = { ...prevState.settings };
+      // use lodash to be able to use dot and array notation
+      _.set(settings, key, value);
+      return { settings };
+    });
   };
 
   handleChangeQuestionTextField = (key, index) => ({ target: { value } }) => {
@@ -207,6 +212,7 @@ class Settings extends Component {
       endRedirectUrl,
       active,
       questions = [],
+      bot: { avatar: botAvatar, name: botName } = {},
     } = settings;
 
     const hasChanged = !_.isEqual(settingsProp, settings);
@@ -240,6 +246,30 @@ class Settings extends Component {
           label={t('Show Header to Students')}
         />
         <FormControlLabel control={activeSwitchControl} label={t('Active')} />
+        <Divider className={classes.divider} />
+        <TextField
+          id="botName"
+          className={classes.textField}
+          label={t('Chatbot Name')}
+          value={botName}
+          onChange={this.handleChangeTextField('bot.name')}
+          rows={1}
+          variant="outlined"
+          multiline
+          fullWidth
+        />
+        <TextField
+          id="botAvatar"
+          className={classes.textField}
+          label={t('Chatbot Avatar')}
+          value={botAvatar}
+          onChange={this.handleChangeTextField('bot.avatar')}
+          rows={1}
+          variant="outlined"
+          multiline
+          fullWidth
+        />
+        <Divider className={classes.divider} />
         <TextField
           id="instructions"
           className={classes.textField}
