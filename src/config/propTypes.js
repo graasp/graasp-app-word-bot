@@ -1,17 +1,18 @@
 import PropTypes from 'prop-types';
 
-// eslint-disable-next-line import/prefer-default-export
-export const QUESTION = PropTypes.shape({
-  context: PropTypes.string,
-  displayPhrase: PropTypes.string,
-  displayPrompt: PropTypes.string,
-  explanation: PropTypes.string,
-  reaction: PropTypes.string,
-  explanationPrompt: PropTypes.string,
-  conclusion: PropTypes.string,
-  correctPhrase: PropTypes.string,
-  conclusionPrompt: PropTypes.string,
-  outro: PropTypes.string,
+export const FRAME = PropTypes.shape({
+  exchanges: [],
+});
+
+export const BOT = PropTypes.shape({
+  name: PropTypes.string,
+  avatar: PropTypes.string,
+});
+
+export const EXCHANGE = PropTypes.shape({
+  messages: PropTypes.arrayOf(PropTypes.string),
+  buttons: PropTypes.arrayOf(PropTypes.string),
+  allowTextInput: PropTypes.bool,
 });
 
 export const APP_INSTANCE_RESOURCE = PropTypes.shape({

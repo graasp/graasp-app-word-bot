@@ -9,17 +9,15 @@ import {
 } from '../types';
 import { showErrorToast } from '../utils/toasts';
 
-export const DEFAULT_QUESTION = {
-  conclusion: '',
-  conclusionPrompt: '',
-  context: '',
-  correctPhrase: '',
-  displayPhrase: '',
-  displayPrompt: '',
-  explanation: '',
-  explanationPrompt: '',
-  outro: '',
-  reaction: '',
+export const DEFAULT_BOT = {
+  avatar: 'C',
+  name: 'Chatbot',
+};
+
+export const DEFAULT_EXCHANGE = {
+  messages: [],
+  buttons: [],
+  allowTextInput: true,
 };
 
 export const DEFAULT_SETTINGS = {
@@ -28,12 +26,9 @@ export const DEFAULT_SETTINGS = {
   endTitle: '',
   endText: '',
   endRedirectUrl: '',
-  questions: [],
+  exchanges: [],
   active: false,
-  bot: {
-    avatar: 'C',
-    name: 'Chatbot',
-  },
+  bot: DEFAULT_BOT,
 };
 
 const INITIAL_STATE = {

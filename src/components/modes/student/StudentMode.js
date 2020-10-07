@@ -5,7 +5,7 @@ import StudentView from './StudentView';
 import { DEFAULT_VIEW, FEEDBACK_VIEW } from '../../../config/views';
 import { getAppInstanceResources } from '../../../actions';
 import Loader from '../../common/Loader';
-import { QUESTION } from '../../../config/propTypes';
+import { FRAME } from '../../../config/propTypes';
 
 class StudentMode extends Component {
   static propTypes = {
@@ -15,7 +15,7 @@ class StudentMode extends Component {
     active: PropTypes.bool,
     dispatchGetAppInstanceResources: PropTypes.func.isRequired,
     userId: PropTypes.string,
-    questions: PropTypes.arrayOf(QUESTION),
+    questions: PropTypes.arrayOf(FRAME),
   };
 
   static defaultProps = {
@@ -48,7 +48,14 @@ class StudentMode extends Component {
   }
 
   render() {
-    const { view, activity, questions, active } = this.props;
+    const { view, activity, exchanges, active } = this.props;
+
+    // only one frame currently
+    const frames = [
+      {
+        exchanges,
+      },
+    ];
 
     if (activity) {
       return <Loader />;
@@ -58,7 +65,7 @@ class StudentMode extends Component {
       case FEEDBACK_VIEW:
       case DEFAULT_VIEW:
       default:
-        return <StudentView questions={questions} active={active} />;
+        return <StudentView frames={frames} active={active} />;
     }
   }
 }
@@ -68,7 +75,7 @@ const mapStateToProps = ({ context, appInstanceResources, appInstance }) => {
     userId,
     appInstanceId,
     activity: appInstanceResources.activity.length,
-    questions: appInstance.content.settings.questions,
+    exchanges: appInstance.content.settings.exchanges,
     active: appInstance.content.settings.active,
   };
 };

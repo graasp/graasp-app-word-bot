@@ -15,7 +15,7 @@ import { withTranslation } from 'react-i18next';
 import { closeSettings, patchAppInstance } from '../../../actions';
 import Loader from '../../common/Loader';
 import {
-  DEFAULT_QUESTION,
+  DEFAULT_EXCHANGE,
   DEFAULT_SETTINGS,
 } from '../../../reducers/appInstance';
 
@@ -65,7 +65,7 @@ class Settings extends Component {
       endText: PropTypes.string,
       endTitle: PropTypes.string,
       endRedirectUrl: PropTypes.string,
-      questions: PropTypes.arrayOf(PropTypes.shape(DEFAULT_QUESTION)),
+      exchanges: PropTypes.arrayOf(PropTypes.shape(DEFAULT_EXCHANGE)),
       bot: {
         avatar: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
@@ -138,65 +138,116 @@ class Settings extends Component {
     });
   };
 
-  handleChangeQuestionTextField = (key, index) => ({ target: { value } }) => {
+  handleChangeExchangeTextField = (key, index) => ({ target: { value } }) => {
     this.setState((prevState) => {
-      const newQuestions = _.cloneDeep(prevState.settings.questions);
-      newQuestions[index][key] = value;
+      const newExchanges = _.cloneDeep(prevState.settings.exchanges);
+      newExchanges[index][key] = value;
       return {
         settings: {
           ...prevState.settings,
-          questions: [...newQuestions],
+          exchanges: [...newExchanges],
         },
       };
     });
   };
 
-  handleAddQuestion = () => {
+  handleChangeExchangeSwitch = (key, index) => ({ target: { checked } }) => {
     this.setState((prevState) => {
-      const newQuestions = _.cloneDeep(prevState.settings.questions);
-      newQuestions.push(DEFAULT_QUESTION);
+      const newExchanges = _.cloneDeep(prevState.settings.exchanges);
+      newExchanges[index][key] = checked;
       return {
         settings: {
           ...prevState.settings,
-          questions: [...newQuestions],
+          exchanges: [...newExchanges],
         },
       };
     });
   };
 
-  renderQuestionForm = (question, index) => {
+  handleAddExchange = () => {
+    this.setState((prevState) => {
+      const newExchanges = _.cloneDeep(prevState.settings.exchanges);
+      newExchanges.push(DEFAULT_EXCHANGE);
+      return {
+        settings: {
+          ...prevState.settings,
+          exchanges: [...newExchanges],
+        },
+      };
+    });
+  };
+
+  handleAddExchangeTextField = (key, index) => () => {
+    this.setState((prevState) => {
+      const newExchanges = _.cloneDeep(prevState.settings.exchanges);
+      newExchanges[index][key].push('');
+      return {
+        settings: {
+          ...prevState.settings,
+          exchanges: [...newExchanges],
+        },
+      };
+    });
+  };
+
+  renderExchangeForm = (exchange, index) => {
     const { t, classes } = this.props;
-    const keys = [
-      'context',
-      'displayPhrase',
-      'displayPrompt',
-      'explanation',
-      'reaction',
-      'explanationPrompt',
-      'conclusion',
-      'correctPhrase',
-      'conclusionPrompt',
-      'outro',
-    ];
+    const textKeys = ['messages', 'buttons'];
+    const { allowTextInput } = exchange;
+    const allowTextInputSwitchControl = (
+      <Switch
+        color="primary"
+        checked={allowTextInput}
+        onChange={this.handleChangeExchangeSwitch('allowTextInput', index)}
+        name="headerVisible"
+      />
+    );
     return (
-      <div key={`question-${index}`}>
-        <Typography variant="h6">{`${t('Question')} #${index + 1}`}</Typography>
-        {keys.map((key) => {
+      <div key={`exchange-${index}`}>
+        <Typography variant="h6">{`${t('Exchange')} #${index + 1}`}</Typography>
+        <Divider className={classes.divider} />
+        {textKeys.map((key) => {
           return (
-            <TextField
-              key={key}
-              id={key}
-              className={classes.textField}
-              label={t(_.startCase(key))}
-              value={question[key]}
-              onChange={this.handleChangeQuestionTextField(key, index)}
-              rows={2}
-              variant="outlined"
-              multiline
-              fullWidth
-            />
+            <>
+              <Grid container alignItems="center" justify="space-between">
+                <Grid item>
+                  <Typography variant="p" className={classes.title}>
+                    {t(_.startCase(key))}
+                  </Typography>
+                </Grid>
+                <Grid item>
+                  <IconButton
+                    onClick={this.handleAddExchangeTextField(key, index)}
+                    style={{ float: 'right' }}
+                  >
+                    <Add />
+                  </IconButton>
+                </Grid>
+              </Grid>
+              {exchange[key].map((value, i) => {
+                return (
+                  <TextField
+                    key={`${key}-${String(i)}`}
+                    id={`${key}-${String(i)}`}
+                    className={classes.textField}
+                    label={t('Text')}
+                    value={value}
+                    onChange={this.handleChangeExchangeTextField(key, index)}
+                    rows={2}
+                    variant="outlined"
+                    multiline
+                    fullWidth
+                  />
+                );
+              })}
+            </>
           );
         })}
+        <FormControlLabel
+          control={allowTextInputSwitchControl}
+          label={t('Allow Text Input')}
+        />
+        <Divider className={classes.divider} />
       </div>
     );
   };
@@ -211,7 +262,7 @@ class Settings extends Component {
       endTitle,
       endRedirectUrl,
       active,
-      questions = [],
+      exchanges = [],
       bot: { avatar: botAvatar, name: botName } = {},
     } = settings;
 
@@ -314,21 +365,20 @@ class Settings extends Component {
         <Grid container alignItems="center" justify="space-between">
           <Grid item>
             <Typography variant="h5" className={classes.title}>
-              {t('Questions')}
+              {t('Exchanges')}
             </Typography>
           </Grid>
           <Grid item>
             <IconButton
-              onClick={this.handleAddQuestion}
-              disabled={questions?.length}
+              onClick={this.handleAddExchange}
               style={{ float: 'right' }}
             >
               <Add />
             </IconButton>
           </Grid>
         </Grid>
-        {questions.map((question, index) =>
-          this.renderQuestionForm(question, index),
+        {exchanges.map((exchange, index) =>
+          this.renderExchangeForm(exchange, index),
         )}
         <Divider className={classes.divider} />
         <Button

@@ -6,10 +6,10 @@ import { Alert } from '@material-ui/lab';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core/styles';
 import 'react-chat-elements/dist/main.css';
-import Questions from './Questions';
+import Frames from './Frames';
 import Start from './Start';
 import { STARTED } from '../../../config/appInstanceResourceTypes';
-import { APP_INSTANCE_RESOURCE, QUESTION } from '../../../config/propTypes';
+import { APP_INSTANCE_RESOURCE, FRAME } from '../../../config/propTypes';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function StudentView({ questions, active, startedResource }) {
+export function StudentView({ frames, active, startedResource }) {
   const { t } = useTranslation();
   const classes = useStyles();
   if (!active) {
@@ -39,7 +39,7 @@ export function StudentView({ questions, active, startedResource }) {
     );
   }
 
-  if (!questions.length) {
+  if (!frames.length) {
     return (
       <div className={classes.root}>
         <Alert severity="error">{t('This activity is empty.')}</Alert>
@@ -58,13 +58,13 @@ export function StudentView({ questions, active, startedResource }) {
 
   return (
     <div className={classes.main}>
-      <Questions questions={questions} />
+      <Frames frames={frames} />
     </div>
   );
 }
 
 StudentView.propTypes = {
-  questions: PropTypes.arrayOf(QUESTION),
+  frames: PropTypes.arrayOf(FRAME),
   classes: PropTypes.shape({
     root: PropTypes.string,
   }).isRequired,
@@ -73,7 +73,7 @@ StudentView.propTypes = {
 };
 
 StudentView.defaultProps = {
-  questions: [],
+  frames: [],
   startedResource: {},
 };
 
